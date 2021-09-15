@@ -1,0 +1,107 @@
+# https://github.com/llvm/llvm-project/tree/main/llvm/include/llvm/AsmParser
+# https://www.apeth.com/nonblog/stories/textmatebundle.html
+# https://code.visualstudio.com/api/language-extensions/overview
+# registerDefinitionProvider, registerDocumentSymbolProvider
+scopeName: source.llvm
+fileTypes:
+    - ll
+    - s
+foldingStartMarker: '/\*\*|\{\s*$'
+foldingStopMarker: '\*\*/|^\s*\}'
+keyEquivalent: ^~L
+name: LLVM
+patterns:
+    -   match: '(define)([^@]+)(@[-a-zA-Z$\._0-9\"]+)\('
+        captures: 
+            '1': { name: keyword.define.llvm }
+            '2': { patterns: [{ include: $self }] }
+            '3': { name: support.function.llvm }
+    -   match: '\b(call)([^@]+)(@[-a-zA-Z$\._0-9\"]+)\('
+        captures: 
+            '1': { name: keyword.control.llvm }
+            '2': { patterns: [{ include: $self }] }
+            '3': { name: support.function.llvm }
+    -   match: '\b(invoke)([^@]+)(@[-a-zA-Z$\._0-9\"]+)\('
+        captures: 
+            '1': { name: keyword.control.llvm }
+            '2': { patterns: [{ include: $self }] }
+            '3': { name: support.function.llvm }
+    -   name: variable.other.local.llvm
+        match: '(%[-a-zA-Z$\._0-9]+)'
+    -   name: variable.other.local.llvm
+        begin: '%"'
+        end: '"'
+    -   name: variable.other.global.llvm
+        match: '(@[-a-zA-Z$\._0-9]+)'
+    -   name: variable.other.global.llvm
+        begin: '@"'
+        end: '"'
+    -   name: variable.other.meta.llvm
+        match: '(![-a-zA-Z$\._0-9]+)'
+    -   name: variable.other.meta.llvm
+        begin: '!"'
+        end: '"'
+    -   match: (![-a-zA-Z$\._0-9]+)
+        name: entity.name.label
+    -   match: ';.*$'
+        name: comment.llvm
+    -   match: \b\d+\.\d+\b
+        name: constant.numeric.float.llvm
+    -   match: '\b(\d+|0(x|X)[a-fA-F0-9]+)\b'
+        name: constant.numeric.integer.llvm
+    -   begin: 'c?"'
+        end: '"'
+        name: string.quoted.double.llvm
+    # Instruction Opcodes
+    -   name: keyword.instruction.term.llvm
+        match: '\b(ret|br|switch|indirectbr|invoke|callbr|resume|catchswitch|catchret|cleanupret|unreachable)\b'
+    -   name: keyword.instruction.op.llvm
+        match: '\b(fneg|add|fadd|sub|fsub|mul|fmul|udiv|sdiv|fdiv|urem|srem|frem|shl|lshr|ashr|and|or|xor)\b'
+    -   name: keyword.instruction.data.llvm
+        match: '\b(extractelement|insertelement|shufflevector|extractvalue|insertvalue)\b'
+    -   name: keyword.instruction.mem.llvm
+        match: '\b(alloca|load|store|fence|cmpxchg|atomicrmw|getelementptr)\b'
+    -   name: keyword.instruction.conv.llvm
+        match: '\b(trunc|zext|sext|fptrunc|fpext|fptoui|fptosi|uitofp|sitofp|ptrtoint|inttoptr|bitcast|addrspacecast)\b'
+    -   name: keyword.instruction.ctrl.llvm
+        match: '\b(icmp|fcmp|phi|select|freeze|call|va_arg|landingpad|catchpad|cleanuppad)\b'
+    -   name: keyword.instruction.aux.llvm
+        match: '\b(to|unwind|within|caller|from|exact|align|atomic|inbounds|inrange|catch|filter|cleanup)\b'
+    -   name: keyword.instruction.atomic.llvm
+        match: '\b(xchg|nand|max|min|umax|umin)\b'
+    # Constants
+    -   name: variable.other.constant.llvm
+        match: '\b(true|false|null|none|zeroinitializer|undef|poison|blockaddress|dso_local_equivalent)\b'
+    -   name: variable.other.constant.llvm
+        match: '\b(eq|ne|ugt|uge|ult|ule|sgt|sge|slt|sle|oeq|ogt|oge|olt|ole|one|ord|ueq|une|uno)\b'
+    -   name: variable.other.constant.llvm
+        match: '\b(unordered|monotonic|acquire|release|acq_rel|seq_cst)\b'
+    # Types
+    -   name: support.type.llvm
+        match: '\b(void|i\d+|half|bfloat|float|double|fp128|x86_fp80|ppc_fp128|x86_amx|x86_mmx|ptr|label|token|metadata|type|opaque|vscale)'
+    # General Keywords
+    -   match: '\b(declare|define|attributes|global|constant|comdat|distinct)\b'
+        name: keyword.general.llvm
+    # Attributes
+    -   match: '\b(allocsize|alwaysinline|argmemonly|sanitize_address|sanitize_hwaddress|sanitize_memtag|builtin|byval|inalloca|cold|convergent|dereferenceable|dereferenceable_or_null|disable_sanitizer_instrumentation|elementtype|inaccessiblememonly|inaccessiblemem_or_argmemonly|inlinehint|inreg|jumptable|minsize|naked|nest|noalias|noundef|nobuiltin|nocallback|nocapture|noduplicate|nofree|noimplicitfloat|noinline|norecurse|nonlazybind|nomerge|nonnull|noprofile|noredzone|noreturn|nosync|nocf_check|nounwind|nosanitize_coverage|null_pointer_is_valid|optforfuzzing|optnone|optsize|preallocated|readnone|readonly|returned|returns_twice|signext|speculatable|ssp|sspreq|sspstrong|safestack|shadowcallstack|sret|sanitize_thread|sanitize_memory|speculative_load_hardening|strictfp|swifterror|swiftself|swiftasync|uwtable|vscale_range|willreturn|writeonly|zeroext|immarg|byref|mustprogress)\b'
+        name: keyword.attribute.llvm
+    # ABIs
+    -   match: '\b(cc|ccc|fastcc|coldcc|intel_ocl_bicc|cfguard_checkcc|x86_stdcallcc|x86_fastcallcc|x86_thiscallcc|x86_vectorcallcc|x86_regcallcc|arm_apcscc|arm_aapcscc|arm_aapcs_vfpcc|aarch64_vector_pcs|aarch64_sve_vector_pcs|msp430_intrcc|avr_intrcc|avr_signalcc|ptx_kernel|ptx_device|spir_kernel|spir_func|x86_64_sysvcc|win64cc|webkit_jscc|anyregcc|swiftcc|swifttailcc|preserve_mostcc|preserve_allcc|ghccc|x86_intrcc|hhvmcc|hhvm_ccc|cxx_fast_tlscc|amdgpu_vs|amdgpu_ls|amdgpu_hs|amdgpu_es|amdgpu_gs|amdgpu_ps|amdgpu_cs|amdgpu_kernel|amdgpu_gfx|tailcc)\b'
+        name: keyword.abi.llvm
+    # Comdat Types
+    -   match: '\b(any|exactmatch|largest|nodeduplicate|samesize)\b'
+        name: keyword.comdat.llvm
+    # Misc Keywords
+    -   match: '\b(addrspace|afn|alias|alignstack|appending|arcp|asm|available_externally|c|common|contract|datalayout|default|deplibs|dllexport|dllimport|dso_local|dso_preemptable|extern_weak|external|externally_initialized|fast|gc|hidden|ifunc|initialexec|inteldialect|internal|linkonce|linkonce_odr|local_unnamed_addr|localdynamic|localexec|module|musttail|ninf|nnan|notail|nsw|nsz|nuw|partition|prefix|private|prologue|protected|reassoc|section|sideeffect|source_filename|syncscope|tail|target|thread_local|triple|unnamed_addr|volatile|weak|weak_odr)\b'
+        name: keyword.misc.llvm
+
+
+# https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/dark_plus.json
+# https://www.apeth.com/nonblog/stories/textmatebundle.html
+# https://macromates.com/manual/en/language_grammars
+
+# function decl: support.function
+# type decl, refs: support.type
+# control flow: keyword.control
+# constants: variable.other.constant
+# labels: entity.name.label
