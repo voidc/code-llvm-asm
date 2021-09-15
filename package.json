@@ -4,6 +4,7 @@
 	"description": "Syntax highlighting and code navigation for LLVM assembly language.",
 	"version": "0.0.1",
 	"publisher": "voidc",
+	"repository": "https://github.com/voidc/code-llvm-asm",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
